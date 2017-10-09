@@ -37,6 +37,7 @@
             -javaagent:${project.build.directory}/lib/byteman.jar=script:${project.build.directory}/test-classes/scripts.btm,listener:true
         </jvm.args.byteman>
         <server.jvm.args>${jvm.args.byteman} ${jvm.args.debug}</server.jvm.args>
+        <skipITs>false</skipITs>
     </properties>
     <dependencies>
         <dependency>
@@ -216,7 +217,7 @@
                                     <goal>integration-test</goal>
                                 </goals>
                                 <configuration>
-                                    <skip>false</skip>
+                                    <skipITs>${skipITs}</skipITs>
                                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                                     <systemPropertyVariables combine.children="append">
                                         <version.org.jboss.narayana>${project.version}</version.org.jboss.narayana>
@@ -281,6 +282,16 @@
             </plugin>
           </plugins>
         </build>
+      </profile>
+      <profile>
+          <id>j9</id>
+          <activation>
+             <jdk>[1.9,)</jdk>
+          </activation>
+          <properties>
+             <!-- JBTM-2796 Tomcat does not support JDK9 currently -->
+             <skipITs>true</skipITs>
+          </properties>
       </profile>
     </profiles>
 </project>
